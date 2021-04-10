@@ -104,9 +104,9 @@ def main():
     #subnet_ip= ["192.168.56.1/24","192.168.56.107"]
     ip_list = run_nmap(subnet_ip)
     ip_select = find_ip(ip_list)
-    ip = ip_address=select_ip(ip_select,subnet_ip)
+    ip_address = select_ip(ip_select,subnet_ip)
     text = run_nmap_two(ip_address)
-    print_resalts(text, ip_select)
+    print_resalts(text, ip_address)
 
 if __name__ == '__main__':
     main()
