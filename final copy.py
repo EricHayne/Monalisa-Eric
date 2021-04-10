@@ -33,7 +33,7 @@ def pick_subnet(ip, network):
         net = net[0]+".1/24"        # DEBUG: #1 ".1/24" is a placeholder. We need to reassess this line/function since we are assuming the subnet mask is "/24". For example, the subnet mask can be anywhere from 8 bits to 31 bits. We need to dynamically determine the subnet mask.
         print(str(count+1)+".",i,net)
         count+=1
-    print(str(count+1)+".","enter another subnet or IP: ")
+    print(count+1)+".","enter another subnet or IP: ")
     print(str(count+2)+".","exit" )
     x=input('Please select the subnet you would like to scan: ')
     x=int(x)
