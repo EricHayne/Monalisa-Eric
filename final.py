@@ -6,6 +6,12 @@ import json
 import ifcfg    # using pip ifcfg module
 
 nmap = nmap3.Nmap()
+def input_checker(selection):
+    try:
+        val = int(selection)
+        return val
+    except ValueError:
+        return selection
 
 def subnet(network):
     net = network.rpartition(".")
@@ -21,7 +27,7 @@ def ifscan():
         network.append(interface['inet'])   # Pulls IPv4 addresses
     ip.pop(-1)      
     network.pop(-1)
-    return network, ip 
+    return network, ip
 
 # The pick_subnet function lists the subnet(s) on the associated network interface. The user is then prompted to enter a numeric value corresponding to the listed subnet(s) (or "exit") from displayed list.
 def pick_subnet(ip, network):
@@ -36,7 +42,13 @@ def pick_subnet(ip, network):
     print(str(count+1)+".","enter another subnet or IP: ")
     print(str(count+2)+".","exit" )
     x=input('Please select the subnet you would like to scan: ')
-    x=int(x)
+    x=input_checker(x)
+    
+    while x not in range(1,(count+3)):   #DEBUG: #2 Need to ERROR on alphabet (a-z, A-Z) and on special characters (e.g. @, $, *, etc.)
+        print("ERROR: not a valid selection")
+        x = input ("Please select an IP address from the list above to run a scan on: ")
+        x=input_checker(x)
+    
     if x == count+2:
         print("\n"+"good-bye")
         exit()
@@ -73,13 +85,13 @@ def select_ip(ip_list,subnet):
     print (str(count+1) + ".  all IP addresses above")
     print (str(count+2)+ ".  exit")
     selection = input ("Please select an IP address from the list above to run a scan on: ")
-    selection = int(selection)
     
+    selection=input_checker(selection)
     
-    while selection > count+2 or selection <1 :     #DEBUG: #2 Need to ERROR on alphabet (a-z, A-Z) and on special characters (e.g. @, $, *, etc.)
+    while selection not in range(1,(count+3)):   #DEBUG: #2 Need to ERROR on alphabet (a-z, A-Z) and on special characters (e.g. @, $, *, etc.)
         print("ERROR: not a valid selection")
         selection = input ("Please select an IP address from the list above to run a scan on: ")
-        selection = int(selection)
+        selection=input_checker(selection)
 
     if selection == count+2:
         ip.append(0)
@@ -103,6 +115,9 @@ def run_nmap_two(ip_address):
 
 # The print_resalts function provides the Nmap scanned results (which includes TCP scan) of the previously user selected IP address(es).
 def print_resalts(text, ip_select):
+    f = open(ip_select[0]+"_port_scan.txt", "w")
+    f.write(json.dumps(text, indent=2))
+    f.close()
     print(json.dumps(text, indent=2))
     print("\n \n Results have been saved to this current directory, file name:  ", ip_select[0]+"_port_scan.txt" )
 
