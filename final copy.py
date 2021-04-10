@@ -110,7 +110,7 @@ def run_nmap_two(ip_address):
     results = []
     nmap = nmap3.NmapScanTechniques()
     for i in ip_address:
-        results.append(nmap.nmap_tcp_scan(i))
+       results.append(nmap.nmap_tcp_scan(i, args="-p- -sV -O -sT -sU"))
     return results
 
 # The print_resalts function provides the Nmap scanned results (which includes TCP scan) of the previously user selected IP address(es).

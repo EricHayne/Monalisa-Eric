@@ -4,8 +4,8 @@ import nmap3    # using pip python3-nmap module
 import os
 import json
 import ifcfg    # using pip ifcfg module
-
 nmap = nmap3.Nmap()
+
 def input_checker(selection):
     try:
         val = int(selection)
