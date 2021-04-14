@@ -22,7 +22,7 @@ def ip_checker(this_thing):
         if i < 0 or i > 255:
             return False
     return True
-
+# This input_checker function does XYZ....
 def input_checker(selection):
     try:
         val = int(selection)
