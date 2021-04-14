@@ -6,6 +6,23 @@ import json
 import ifcfg    # using pip ifcfg module
 
 nmap = nmap3.Nmap()
+def ip_checker(this_thing):
+    net= this_thing
+    net = net.rpartition(".")
+    if net[2] == "1/24":
+        this_thing = net[0] + ".111"
+
+    a = this_thing.split('.')
+    if len(a) != 4:
+        return False
+    for x in a:
+        if not x.isdigit():
+            return False
+        i = int(x)
+        if i < 0 or i > 255:
+            return False
+    return True
+
 def input_checker(selection):
     try:
         val = int(selection)
@@ -48,12 +65,22 @@ def pick_subnet(ip, network):
         print("ERROR: not a valid selection")
         x = input ("Please select an IP address from the list above to run a scan on: ")
         x=input_checker(x)
-    
+
     if x == count+2:
         print("\n"+"good-bye")
         exit()
-    subnet_addres = subnet(network[x-1])
-    my_pc = network[x-1]        # Identifies the local host
+    
+    elif x == count+1:
+        scan_ip=input("Pleas enter ip port or subnet to scan:  ")
+        while ip_checker(scan_ip) == False:
+            scan_ip=input("pleas input a valid IP:  ")
+        my_pc= "0.0.0.0"
+        subnet_address = scan_ip
+        return subnet_addres, my_pc
+
+    else:
+        subnet_addres = subnet(network[x-1])
+        my_pc = network[x-1]        # Identifies the local host
     return subnet_addres, my_pc
 
 # The run_nmap function calls nmap3 module, which runs scan type, Host Discovery and omits port scan.
