@@ -51,7 +51,7 @@ def pick_subnet(ip, network):
     print("We have found the following networks:")
     count=0
     for i in ip:
-        net= subnet(network[count])
+        net = subnet(network[count])
         net = net.rpartition(".")
         net = net[0]+".1/24"        # DEBUG: #1 ".1/24" is a placeholder. We need to reassess this line/function since we are assuming the subnet mask is "/24". For example, the subnet mask can be anywhere from 8 bits to 31 bits. We need to dynamically determine the subnet mask.
         print(str(count+1)+".",i,net)
@@ -75,7 +75,7 @@ def pick_subnet(ip, network):
         while ip_checker(scan_ip) == False:
             scan_ip=input("pleas input a valid IP:  ")
         my_pc= "0.0.0.0"
-        subnet_address = scan_ip
+        subnet_addres = scan_ip
         return subnet_addres, my_pc
 
     else:
@@ -137,8 +137,8 @@ def run_nmap_two(ip_address):
     results = []
     nmap = nmap3.NmapScanTechniques()
     for i in ip_address:
-        results.append(nmap.nmap_tcp_scan(i))
-        #results.append(nmap.nmap_tcp_scan(i, args="-p- -sV -O -sT -sU"))
+        #results.append(nmap.nmap_tcp_scan(i)) #this line is only for testing with a faster scan
+        results.append(nmap.nmap_tcp_scan(i, args="-p- -sV -O -sT"))
     return results
 
 # The print_resalts function provides the Nmap scanned results (which includes TCP scan) of the previously user selected IP address(es).
@@ -146,9 +146,63 @@ def print_resalts(text, ip_select):
     f = open(ip_select[0]+"_port_scan.txt", "w")
     f.write(json.dumps(text, indent=2))
     f.close()
-    print(json.dumps(text, indent=2))
+    #print(text)
+    #print(json.dumps(text, indent=2))
     print("\n \n Results have been saved to this current directory, file name:  ", ip_select[0]+"_port_scan.txt" )
 
+def raw_to_human(raw,ip):
+    list_1 = []
+    list_2 = []
+    list_3 = []
+    list_4 = []
+    list_5 = []
+    list_6 = []
+    list_7 = []
+    list_8 = []
+    print()
+    count = 0
+    for x in ip:
+        
+        if x in raw[count]:
+            n=len(raw[count][x]['ports'])
+            if n != 0:
+                for i in range(len(raw[count][x]['ports'])):
+                    list_1.append(raw[count][x]['ports'][i].get('portid','none'))
+                    list_2.append(raw[count][x]['ports'][i]['service'].get('name',"none"))
+                    list_3.append(raw[count][x]['ports'][i]['service'].get('product',"none"))
+                    list_4.append(raw[count][x]['ports'][i]['service'].get('name',"none"))
+                    list_5.append(raw[count][x]['ports'][i]['service'].get('version',"none"))
+                    list_6.append(raw[count][x]['ports'][i]['service'].get('extrainfo',"none"))
+                    list_7.append(raw[count][x]['ports'][i]['service'].get('hostname',"none"))
+                    list_8.append(raw[count][x]['ports'][i]['service'].get('conf',"none"))
+
+                space_1 = len(max(list_1, key = len))+4
+                space_2 = len(max(list_2, key = len))+4
+                space_3 = len(max(list_3, key = len))+4
+                space_4 = len(max(list_4, key = len))+4
+                space_5 = len(max(list_5, key = len))+4
+                space_6 = len(max(list_6, key = len))+10
+                space_7 = len(max(list_7, key = len))+8
+                space_8 = len(max(list_8, key = len))+10
+                print('For IP: ',x)
+                print('This computer is running: ',raw[0][x]['osmatch'][0].get('name','none'), 'accuracy: ',raw[0][x]['osmatch'][0].get('accuracy','none'),'\n')
+                print("port #".ljust(space_1),"port ID".ljust(space_2),"Serves".ljust(space_3),"product".ljust(space_4),"version".ljust(space_5),"More Info".ljust(space_6),"Host Name".ljust(space_7),"Confidants".ljust(space_8),"\n")
+                for i in range(len(raw[count][x]['ports'])):
+                    print(list_1[i].ljust(space_1),
+                        list_2[i].ljust(space_2),
+                        list_3[i].ljust(space_3),
+                        list_4[i].ljust(space_4),
+                        list_5[i].ljust(space_5),
+                        list_6[i].ljust(space_6),
+                        list_7[i].ljust(space_7),
+                        list_8[i].ljust(space_8))
+                print("\n")
+                count+=1
+            else:
+                print(x, "has no open ports")
+        else:
+                print(x, "has no open ports")
+    return 
 
 #The main function sequentially calls the list of functions to determine the network interfaces and the IP addresses from the associated network. Once the user defines the scan parameters, the tool scans accordingly. For more details on how each function works, please read the comments posted right above the functions. 
 def main():
@@ -158,6 +212,7 @@ def main():
     ip_select = find_ip(ip_list)
     ip_address = select_ip(ip_select,subnet_ip)
     text = run_nmap_two(ip_address)
+    raw_to_human(text,ip_address)
     print_resalts(text, ip_address)
 
 if __name__ == '__main__':
