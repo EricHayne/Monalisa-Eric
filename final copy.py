@@ -162,10 +162,10 @@ def raw_to_human(raw,ip):
     print()
     count = 0
     for x in ip:
-        
         if x in raw[count]:
             n=len(raw[count][x]['ports'])
             if n != 0:
+                file = open(ip_select[x]+"_port_scan.txt", "w")
                 for i in range(len(raw[count][x]['ports'])):
                     list_1.append(raw[count][x]['ports'][i].get('portid','none'))
                     list_2.append(raw[count][x]['ports'][i]['service'].get('name',"none"))
@@ -196,12 +196,32 @@ def raw_to_human(raw,ip):
                         list_6[i].ljust(space_6),
                         list_7[i].ljust(space_7),
                         list_8[i].ljust(space_8))
+                    file.write(list_1[i].ljust(space_1),
+                        list_2[i].ljust(space_2),
+                        list_3[i].ljust(space_3),
+                        list_4[i].ljust(space_4),
+                        list_5[i].ljust(space_5),
+                        list_6[i].ljust(space_6),
+                        list_7[i].ljust(space_7),
+                        list_8[i].ljust(space_8))
+
                 print("\n")
                 count+=1
-            else:
+                file.close()
+            else:i
                 print(x, "has no open ports")
+                file.write(x, "has no open ports")
+                file.close()
         else:
-                print(x, "has no open ports")
+            print(x, "has no open ports")
+            file.write(x, "has no open ports")
+            file.close()
+
+        def print_resalts(text, ip_select):
+    f = open("full_scan", "w")    
+    f.write(json.dumps(text, indent=2))
+    f.close()
+    print("\n \n Results have been saved to this current directory, file name:  ", ip_select[0]+"_port_scan.txt" )        
     return 
 
 #The main function sequentially calls the list of functions to determine the network interfaces and the IP addresses from the associated network. Once the user defines the scan parameters, the tool scans accordingly. For more details on how each function works, please read the comments posted right above the functions. 
