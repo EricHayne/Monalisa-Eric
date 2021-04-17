@@ -141,15 +141,6 @@ def run_nmap_two(ip_address):
         results.append(nmap.nmap_tcp_scan(i, args="-p- -sV -O -sT"))
     return results
 
-# The print_resalts function provides the Nmap scanned results (which includes TCP scan) of the previously user selected IP address(es).
-def print_resalts(text, ip_select):
-    f = open(ip_select[0]+"_port_scan.txt", "w")
-    f.write(json.dumps(text, indent=2))
-    f.close()
-    #print(text)
-    #print(json.dumps(text, indent=2))
-    print("\n \n Results have been saved to this current directory, file name:  ", ip_select[0]+"_port_scan.txt" )
-
 def raw_to_human(raw,ip):
     list_1 = []
     list_2 = []
@@ -232,7 +223,6 @@ def main():
     ip_address = select_ip(ip_select,subnet_ip)
     text = run_nmap_two(ip_address)
     raw_to_human(text,ip_address)
-    print_resalts(text, ip_address)
 
 if __name__ == '__main__':
     main()
