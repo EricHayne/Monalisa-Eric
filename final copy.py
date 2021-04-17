@@ -216,7 +216,7 @@ def raw_to_human(raw,ip):
                 print("\n")
                 count+=1
                 file.close()
-            else:i
+            else:
                 print(x, "has no open ports")
                 file.write(x, "has no open ports")
                 file.close()
@@ -225,7 +225,7 @@ def raw_to_human(raw,ip):
             file.write(x, "has no open ports")
             file.close()
 
-        def print_resalts(text, ip_select):
+        
     f = open("full_scan", "w")    
     f.write(json.dumps(text, indent=2))
     f.close()        
