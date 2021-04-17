@@ -22,7 +22,7 @@ def ip_checker(this_thing):
         if i < 0 or i > 255:
             return False
     return True
-
+# This input_checker function does XYZ....
 def input_checker(selection):
     try:
         val = int(selection)
@@ -39,22 +39,39 @@ def subnet(network):
 def ifscan():
     ip=[]
     network=[]
+    netmask=[]
+    CIDR_notation=[]
+    network_CIDR=[]
     for name, interface in ifcfg.interfaces().items():
         ip.append(interface['device'])      # Pulls Ethernet interfaces names
         network.append(interface['inet'])   # Pulls IPv4 addresses
+        netmask.append(interface['netmask'])    # Pulls netmask to define the class
+
     ip.pop(-1)      
     network.pop(-1)
-    return network, ip
+    netmask.pop(-1)
+    for item in netmask:
+        item_octets = item.split('.')
+        negative_offset = 0
+
+        for octet in reversed(item_octets):
+            binary = format(int(octet), '08b')
+            for char in reversed(binary):
+                if char == '1':
+                    break
+                negative_offset += 1
+        CIDR_notation.append('/{0}'.format(32-negative_offset))
+
+    for y in range(len(network)):
+        network_CIDR.append((ip[y] + ': ')+network[y]+CIDR_notation[y])
+    return network_CIDR, network
 
 # The pick_subnet function lists the subnet(s) on the associated network interface. The user is then prompted to enter a numeric value corresponding to the listed subnet(s) (or "exit") from displayed list.
-def pick_subnet(ip, network):
-    print("We have found the following networks:")
+def pick_subnet(network_CIDR, network):
+    print("We have found the following IP addresses associated with the attached network interfaces:")
     count=0
-    for i in ip:
-        net = subnet(network[count])
-        net = net.rpartition(".")
-        net = net[0]+".1/24"        # DEBUG: #1 ".1/24" is a placeholder. We need to reassess this line/function since we are assuming the subnet mask is "/24". For example, the subnet mask can be anywhere from 8 bits to 31 bits. We need to dynamically determine the subnet mask.
-        print(str(count+1)+".",i,net)
+    for i in network_CIDR:
+        print(str(count+1)+".",i)
         count+=1
     print(str(count+1)+".","enter another subnet or IP: ")
     print(str(count+2)+".","exit" )
@@ -216,8 +233,8 @@ def raw_to_human(raw,ip):
 
 #The main function sequentially calls the list of functions to determine the network interfaces and the IP addresses from the associated network. Once the user defines the scan parameters, the tool scans accordingly. For more details on how each function works, please read the comments posted right above the functions. 
 def main():
-    network, ip = ifscan()
-    subnet_ip = pick_subnet(ip, network)
+    network_CIDR, network = ifscan()
+    subnet_ip = pick_subnet(network_CIDR, network)
     ip_list = run_nmap(subnet_ip)
     ip_select = find_ip(ip_list)
     ip_address = select_ip(ip_select,subnet_ip)
