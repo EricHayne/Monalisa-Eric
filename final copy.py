@@ -220,8 +220,7 @@ def raw_to_human(raw,ip):
         def print_resalts(text, ip_select):
     f = open("full_scan", "w")    
     f.write(json.dumps(text, indent=2))
-    f.close()
-    print("\n \n Results have been saved to this current directory, file name:  ", ip_select[0]+"_port_scan.txt" )        
+    f.close()        
     return 
 
 #The main function sequentially calls the list of functions to determine the network interfaces and the IP addresses from the associated network. Once the user defines the scan parameters, the tool scans accordingly. For more details on how each function works, please read the comments posted right above the functions. 
