@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 def raw_to_human(raw,ip):
+    raw = text
     list_1 = []
     list_2 = []
     list_3 = []
@@ -14,7 +15,7 @@ def raw_to_human(raw,ip):
         if x in raw[count]:
             n=len(raw[count][x]['ports'])
             if n != 0:
-                file = open(ip_select[x]+"_port_scan.txt", "w")
+                file = open(ip[x]+"_port_scan.txt", "w")
                 for i in range(len(raw[count][x]['ports'])):
                     list_1.append(raw[count][x]['ports'][i].get('portid','none'))
                     list_2.append(raw[count][x]['ports'][i]['service'].get('name',"none"))
@@ -36,6 +37,9 @@ def raw_to_human(raw,ip):
                 print('For IP: ',x)
                 print('This computer is running: ',raw[0][x]['osmatch'][0].get('name','none'), 'accuracy: ',raw[0][x]['osmatch'][0].get('accuracy','none'),'\n')
                 print("port #".ljust(space_1),"port ID".ljust(space_2),"Serves".ljust(space_3),"product".ljust(space_4),"version".ljust(space_5),"More Info".ljust(space_6),"Host Name".ljust(space_7),"Confidants".ljust(space_8),"\n")
+                file.write('For IP: ',x)
+                file.write('This computer is running: ',raw[0][x]['osmatch'][0].get('name','none'), 'accuracy: ',raw[0][x]['osmatch'][0].get('accuracy','none'),'\n')
+                file.write("port #".ljust(space_1),"port ID".ljust(space_2),"Serves".ljust(space_3),"product".ljust(space_4),"version".ljust(space_5),"More Info".ljust(space_6),"Host Name".ljust(space_7),"Confidants".ljust(space_8),"\n")
                 for i in range(len(raw[count][x]['ports'])):
                     print(list_1[i].ljust(space_1),
                         list_2[i].ljust(space_2),
@@ -65,8 +69,6 @@ def raw_to_human(raw,ip):
             print(x, "has no open ports")
             file.write(x, "has no open ports")
             file.close()
-
-        def print_resalts(text, ip_select):
     f = open("full_scan", "w")    
     f.write(json.dumps(text, indent=2))
     f.close()
