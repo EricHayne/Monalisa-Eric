@@ -175,7 +175,9 @@ def raw_to_human(raw,ip):
         if x in raw[count]:
             n=len(raw[count][x]['ports'])
             if n != 0:  
+                count_2 =0
                 for i in range(len(raw[count][x]['ports'])):
+                    
                     list_1.append(raw[count][x]['ports'][i].get('portid','none'))
                     list_2.append(raw[count][x]['ports'][i]['service'].get('name',"none"))
                     list_3.append(raw[count][x]['ports'][i]['service'].get('product',"none"))
@@ -184,6 +186,7 @@ def raw_to_human(raw,ip):
                     list_6.append(raw[count][x]['ports'][i]['service'].get('extrainfo',"none"))
                     list_7.append(raw[count][x]['ports'][i]['service'].get('hostname',"none"))
                     list_8.append(raw[count][x]['ports'][i]['service'].get('conf',"none"))
+                    count_2+=1
 
                 space_1 = len(max(list_1,  key = len))+4
                 space_2 = len(max(list_2, key = len))+4
@@ -194,11 +197,11 @@ def raw_to_human(raw,ip):
                 space_7 = len(max(list_7, key = len))+8
                 space_8 = len(max(list_8, key = len))+10
                 print('For IP: '+x)
-                print('This computer is running: ',raw[count][x]['osmatch'].get('name','none')), 'accuracy: ',raw[count][x]['osmatch'].get('accuracy','none'),'\n'
+                print('This computer is running: ',raw[count][x]['osmatch'][0].get('name','none'),'accuracy: ',raw[count][x]['osmatch'][0].get('accuracy','none'),'\n')
                 print("port #".ljust(space_1),"port ID".ljust(space_2),"Serves".ljust(space_3),"product".ljust(space_4),"version".ljust(space_5),"More Info".ljust(space_6),"Host Name".ljust(space_7),"Confidants".ljust(space_8),"\n")
                 file.write('For IP: '+ x)
 
-                w = 'This computer is running: ' + ' ' + raw[count][x]['osmatch'].get('name','none') + ' ' + 'accuracy: ' + ' ' + raw[count][x]['osmatch'].get('accuracy','none') + '\n'
+                w = 'This computer is running: ' + ' ' + raw[count][x]['osmatch'][0].get('name','none') + ' ' + 'accuracy: ' + ' ' + raw[count][x]['osmatch'][0].get('accuracy','none') + '\n'
                 file.write(w)
 
                 file.write("port #".ljust(space_1)+' '+"port ID".ljust(space_2)+' '+"Serves".ljust(space_3)+' '+"product".ljust(space_4)+' '+"version".ljust(space_5)+' '+"More Info".ljust(space_6)+' '+"Host Name".ljust(space_7)+' '+"Confidants".ljust(space_8)+' '+"\n")
